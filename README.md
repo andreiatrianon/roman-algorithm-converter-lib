@@ -1,4 +1,4 @@
-# at-roman-algorithm-converter v.1.0.0
+# at-roman-algorithm-converter v.1.0.2
 
 **Esta biblioteca tem a funcionalidade de coverter algarismos romanos para arábicos e vice-versa**
 Nesta versão, é possível converter números entre 1 e 3999.
@@ -12,7 +12,8 @@ Exemplo de uso:
 
 ```
 $node
-> let romanToInt = require("at-roman-algorithm-converter")
+> let convert = require("at-roman-algorithm-converter");
+> let romanToInt = convert.romanToInt;
 > romanToInt('XX'); //20
 ```
 
@@ -22,7 +23,8 @@ Exemplo de uso:
 
 ```
 $node
-> let intToRoman = require("at-roman-algorithm-converter")
+> let convert = require("at-roman-algorithm-converter");
+> let intToRoman = convert.intToRoman;
 > intToRoman(20); //'XX'
 ```
 

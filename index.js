@@ -8,58 +8,32 @@ const romans = {
   'M': 1000
 };
 
-const unitaries = {
+const arabics = {
   1: 'I',
-  2: 'II',
-  3: 'III',
   4: 'IV',
   5: 'V',
-  6: 'VI',
-  7: 'VII',
-  8: 'VIII',
-  9: 'IX'
-};
-
-const dozens = {
-  1: 'X',
-  2: 'XX',
-  3: 'XXX',
-  4: 'XL',
-  5: 'L',
-  6: 'LX',
-  7: 'LXX',
-  8: 'LXXX',
-  9: 'XC'
-};
-
-const hundreds = {
-  1: 'C',
-  2: 'CC',
-  3: 'CCC',
-  4: 'CD',
-  5: 'D',
-  6: 'DC',
-  7: 'DCC',
-  8: 'DCCC',
-  9: 'CM'
-};
-
-const millions = {
-  1: 'M',
-  2: 'MM',
-  3: 'MMM'
+  9: 'IX',
+  10: 'X',
+  40: 'XL',
+  50: 'L',
+  90: 'XC',
+  100: 'C',
+  400: 'CD',
+  500: 'D',
+  900: 'CM',
+  1000: 'M'
 };
 
 function romanToInt(num) {
   if (num === '') {
     throw new Error('The parameter is empty, insert a roman algorithm');
   } else if (!isNaN(num)) {
-    throw new Error('The parameter contains arabics algorithms, insert only romans algorithms');
+    throw new Error('The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
   } else {
     let romanNumInArray = num.split('');
     romanNumInArray.map(el => {
       if (romans[el] === undefined) {
-        throw new Error('The parameter contains arabics algorithms, insert only romans algorithms');
+        throw new Error('The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
       }
     });
     let arrayOfConvertedNumbers = getArrayOfConvertedNumbers(romanNumInArray);
@@ -85,10 +59,12 @@ function getArrayOfNumbersToSum(arrayWithNumbers) {
 }
 
 function intToRoman(num) {
-  if (num === '') {
+  var numToInt = num * 1;
+  if (arabics[numToInt] !== undefined) {
+    return arabics[numToInt];
+  } else if (num === '') {
     throw new Error('The parameter is empty, insert a arabic algorithm');
   } else {
-    let numToInt = num * 1;
     if (numToInt === 0) {
       throw new Error('The parameter is zero, insert a arabic algorithm between 1 and 3999');
     } else if (numToInt < 0) {
@@ -100,53 +76,50 @@ function intToRoman(num) {
     } else if (numToInt % 1 !== 0) {
       throw new Error('The parameter is a float number, insert a integer number');
     } else {
-      let numInArray = numToInt.toString().split('');
-      if (numInArray.length === 1) {
-        return unitaries[numInArray[0]];
-      } else if (numInArray.length === 2) {
-        return convertTwoIntDigits(numInArray);
-      } else if (numInArray.length === 3) {
-        return convertThreeIntDigits(numInArray);
-      } else {
-        return convertFourIntDigits(numInArray);
-      }
+      let arrayOfArabicsKeys = getArrayOfKeysAsNumber(arabics);
+      var remainder = numToInt;
+      let arrayOfRomansNumbers = getRomansAlgorithms(arrayOfArabicsKeys, remainder);
+      return joinTextsOfArray(arrayOfRomansNumbers);
     }
   }
 }
 
-function convertTwoIntDigits(arrayWithNumbers) {
-  let lengthOfArray = arrayWithNumbers.length;
-  if (arrayWithNumbers[1] === '0') {
-    return dozens[arrayWithNumbers[lengthOfArray - 2]];
-  } else {
-    return dozens[arrayWithNumbers[lengthOfArray - 2]] + unitaries[arrayWithNumbers[lengthOfArray - 1]];
-  }
+function getRomansAlgorithms(arrayOfArabicsKeys, remainder) {
+  let arrayOfRomansNumbers = [];
+  do {
+    let arrayOfFilteredKeys = arrayOfArabicsKeys.filter(toFilterArabicKeys.bind(this, remainder));
+    let lastKeyOfFilteredKeys = arrayOfFilteredKeys[arrayOfFilteredKeys.length - 1];
+    let romanAlgarithm = arabics[lastKeyOfFilteredKeys];
+    let getRepeatTimes = getIntegerNumberFromDivision(remainder, lastKeyOfFilteredKeys);
+    if (getRepeatTimes < 2) {
+      arrayOfRomansNumbers.push(romanAlgarithm);
+    } else {
+      arrayOfRomansNumbers.push(romanAlgarithm.repeat(getRepeatTimes));
+    }
+    remainder = remainder % lastKeyOfFilteredKeys;
+    if (arabics[remainder] !== undefined) {
+      arrayOfRomansNumbers.push(arabics[remainder]);
+      remainder = 0;
+    }
+  } 
+  while(remainder !== 0);
+  return arrayOfRomansNumbers;
 }
 
-function convertThreeIntDigits(arrayWithNumbers) {
-  let lengthOfArray = arrayWithNumbers.length;
-  if (arrayWithNumbers[1] === '0' && arrayWithNumbers[2] === '0') {
-    return hundreds[arrayWithNumbers[lengthOfArray - 3]];
-  } else if (arrayWithNumbers[1] === '0') {
-    return hundreds[arrayWithNumbers[lengthOfArray - 3]] + unitaries[arrayWithNumbers[2]];
-  } else {
-    return hundreds[arrayWithNumbers[lengthOfArray - 3]] + convertTwoIntDigits(arrayWithNumbers);
-  }
+function getArrayOfKeysAsNumber(obj) {
+  return Object.keys(obj).map(Number);
 }
 
-function convertFourIntDigits(arrayWithNumbers) {
-  let lengthOfArray = arrayWithNumbers.length;
-  if (arrayWithNumbers[1] === '0' && arrayWithNumbers[2] === '0' && arrayWithNumbers[3] === '0') {
-    return millions[arrayWithNumbers[lengthOfArray - 4]];
-  } else if (arrayWithNumbers[2] === '0' && arrayWithNumbers[3] === '0') {
-    return millions[arrayWithNumbers[lengthOfArray - 4]] + hundreds[arrayWithNumbers[1]];
-  } else if (arrayWithNumbers[1] === '0' && arrayWithNumbers[2] === '0') {
-    return millions[arrayWithNumbers[lengthOfArray - 4]] + unitaries[arrayWithNumbers[3]];
-  } else if (arrayWithNumbers[1] === '0') {
-    return millions[arrayWithNumbers[lengthOfArray - 4]] + convertTwoIntDigits(arrayWithNumbers);
-  } else {
-    return millions[arrayWithNumbers[lengthOfArray - 4]] + convertThreeIntDigits(arrayWithNumbers);
-  }
+function toFilterArabicKeys(num, key) {
+  return ((num / key) > 1) && ((num / key) < 4);
+}
+
+function getIntegerNumberFromDivision(numOne, numTwo) {
+  return parseInt(numOne / numTwo);
+}
+
+function joinTextsOfArray(arr) {
+  return arr.reduce((total, num) => total + num);
 }
 
 module.exports = {

@@ -9,19 +9,20 @@ describe("romanToInt - convert roman to arabic algorithm:", function() {
         expect(() => romanToInt('')).to.throw(Error, 'The parameter is empty, insert a roman algorithm');
       });
     });
-    describe("when parameter contains arabics algorithms", function() {
-      it("should throw a Error message: 'The parameter contains arabics algorithms, insert only romans algorithms'", () => {
-        expect(() => romanToInt(2)).to.throw(Error, 'The parameter contains arabics algorithms, insert only romans algorithms');
-        expect(() => romanToInt('C2X')).to.throw(Error, 'The parameter contains arabics algorithms, insert only romans algorithms');
-        expect(() => romanToInt('abc')).to.throw(Error, 'The parameter contains arabics algorithms, insert only romans algorithms');
-        expect(() => romanToInt('XABII')).to.throw(Error, 'The parameter contains arabics algorithms, insert only romans algorithms');
+    describe("when parameter contains arabics algorithms or a space", function() {
+      it("should throw a Error message: 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space'", () => {
+        expect(() => romanToInt(2)).to.throw(Error, 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
+        expect(() => romanToInt('C2X')).to.throw(Error, 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
+        expect(() => romanToInt('abc')).to.throw(Error, 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
+        expect(() => romanToInt('XABII')).to.throw(Error, 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
+        expect(() => romanToInt('X II')).to.throw(Error, 'The parameter contains arabics algorithms or a space, insert only romans algorithms without space');
       });
     });
   });
   describe("> Should return a arabic algorithm:", function() {
-    describe("when parameter is 'X'", function() {
-      it("should return 10", () => {
-        expect(romanToInt('X')).to.deep.equal(10);
+    describe("when parameter is 'VIII'", function() {
+      it("should return 8", () => {
+        expect(romanToInt('VIII')).to.deep.equal(8);
       });
     });
     describe("when parameter is 'IX'", function() {
@@ -29,9 +30,39 @@ describe("romanToInt - convert roman to arabic algorithm:", function() {
         expect(romanToInt('IX')).to.deep.equal(9);
       });
     });
+    describe("when parameter is 'X'", function() {
+      it("should return 10", () => {
+        expect(romanToInt('X')).to.deep.equal(10);
+      });
+    });
     describe("when parameter is 'XXII'", function() {
       it("should return 22", () => {
         expect(romanToInt('XXII')).to.deep.equal(22);
+      });
+    });
+    describe("when parameter is 'L'", function() {
+      it("should return 50", () => {
+        expect(romanToInt('L')).to.deep.equal(50);
+      });
+    });
+    describe("when parameter is 'CVI'", function() {
+      it("should return 106", () => {
+        expect(romanToInt('CVI')).to.deep.equal(106);
+      });
+    });
+    describe("when parameter is 'MXLIX'", function() {
+      it("should return 1049", () => {
+        expect(romanToInt('MXLIX')).to.deep.equal(1049);
+      });
+    });
+    describe("when parameter is 'MCCXXIV'", function() {
+      it("should return 1224", () => {
+        expect(romanToInt('MCCXXIV')).to.deep.equal(1224);
+      });
+    });
+    describe("when parameter is 'MMMVII'", function() {
+      it("should return 3007", () => {
+        expect(romanToInt('MMMVII')).to.deep.equal(3007);
       });
     });
     describe("when parameter is 'MMMCMXCIX'", function() {
@@ -53,6 +84,7 @@ describe("intToRoman - convert arabic to roman algorithm:", function() {
       it("should throw a Error message: 'The parameter contais a text, insert a arabic algorithm without text'", () => {
         expect(() => intToRoman('0ABC00')).to.throw(Error, 'The parameter contais a text, insert a arabic algorithm without text');
         expect(() => intToRoman('abc')).to.throw(Error, 'The parameter contais a text, insert a arabic algorithm without text');
+        expect(() => intToRoman('200 5')).to.throw(Error, 'The parameter contais a text, insert a arabic algorithm without text');
       });
     });
     describe("when parameter is zero", function() {
@@ -105,9 +137,9 @@ describe("intToRoman - convert arabic to roman algorithm:", function() {
         expect(intToRoman('50')).to.deep.equal('L');
       });
     });
-    describe("when parameter is '12'", function() {
-      it("should return 'XII", () => {
-        expect(intToRoman('12')).to.deep.equal('XII');
+    describe("when parameter is '15'", function() {
+      it("should return 'XV", () => {
+        expect(intToRoman('15')).to.deep.equal('XV');
       });
     });
     describe("when parameter is '122'", function() {
@@ -130,24 +162,19 @@ describe("intToRoman - convert arabic to roman algorithm:", function() {
         expect(intToRoman(10)).to.deep.equal('X');
       });
     });
-    describe("when parameter is 102", function() {
-      it("should return 'CII'", () => {
-        expect(intToRoman(102)).to.deep.equal('CII');
+    describe("when parameter is 106", function() {
+      it("should return 'CVI'", () => {
+        expect(intToRoman(106)).to.deep.equal('CVI');
       });
     });
-    describe("when parameter is 200", function() {
-      it("should return 'CC'", () => {
-        expect(intToRoman(200)).to.deep.equal('CC');
+    describe("when parameter is 900", function() {
+      it("should return 'CM'", () => {
+        expect(intToRoman(900)).to.deep.equal('CM');
       });
     });
-    describe("when parameter is 1000", function() {
-      it("should return 'M'", () => {
-        expect(intToRoman(1000)).to.deep.equal('M');
-      });
-    });
-    describe("when parameter is 1020", function() {
-      it("should return 'MXX'", () => {
-        expect(intToRoman(1020)).to.deep.equal('MXX');
+    describe("when parameter is 2008", function() {
+      it("should return 'MMVIII'", () => {
+        expect(intToRoman(2008)).to.deep.equal('MMVIII');
       });
     });
     describe("when parameter is 2200", function() {
@@ -155,9 +182,14 @@ describe("intToRoman - convert arabic to roman algorithm:", function() {
         expect(intToRoman(2200)).to.deep.equal('MMCC');
       });
     });
-    describe("when parameter is 2002", function() {
-      it("should return 'MMII'", () => {
-        expect(intToRoman(2002)).to.deep.equal('MMII');
+    describe("when parameter is 3007", function() {
+      it("should return 'MMMVII'", () => {
+        expect(intToRoman(3007)).to.deep.equal('MMMVII');
+      });
+    });
+    describe("when parameter is 3049", function() {
+      it("should return 'MMMXLIX'", () => {
+        expect(intToRoman(3049)).to.deep.equal('MMMXLIX');
       });
     });
   });
