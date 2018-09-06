@@ -1,0 +1,30 @@
+{
+  "name": "at-roman-algorithm-converter",
+  "version": "1.0.0",
+  "description": "this converts roman to arabic algorithm and vice versa between 1 and 3999",
+  "main": "index.js",
+  "scripts": {
+    "test": "romanToInt()"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreiatrianon/roman-arabic-converter-lib.git"
+  },
+  "keywords": [
+    "roman",
+    "algorithm",
+    "converter"
+  ],
+  "author": "Andreia Trianon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andreiatrianon/roman-arabic-converter-lib/issues"
+  },
+  "homepage": "https://github.com/andreiatrianon/roman-arabic-converter-lib#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.5.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1"
+  }
+}
